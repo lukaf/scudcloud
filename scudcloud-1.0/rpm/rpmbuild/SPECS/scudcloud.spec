@@ -6,11 +6,11 @@ Release:	1%{?dist}
 Summary:	ScudCloud is a non official desktop client for Slack
 
 Group:		utils
-License:	MIT
-URL:		https://github.com/raelgc/%{name}
-Source0:	https://github.com/raelgc/%{name}/archive/v%{version}.tar.gz
+License:    MIT
+URL:        https://github.com/raelgc/%{name}
+Source0:    https://github.com/raelgc/%{name}/archive/v%{version}.tar.gz
 
-Requires:	python3
+Requires:   python3
 Requires:   python3-PyQt4
 Requires:   python3-dbus
 
