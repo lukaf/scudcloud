@@ -1,11 +1,11 @@
 %define scudcloud_prefix /opt/scudcloud
 
-Name:   scudcloud
+Name:       scudcloud
 Version:    %{SCUDCLOUD_VERSION}
-Release:	1%{?dist}
-Summary:	ScudCloud is a non official desktop client for Slack
+Release:    1%{?dist}
+Summary:    ScudCloud is a non official desktop client for Slack
 
-Group:		utils
+Group:      utils
 License:    MIT
 URL:        https://github.com/raelgc/%{name}
 Source0:    https://github.com/raelgc/%{name}/archive/v%{version}.tar.gz
