@@ -29,7 +29,7 @@ Slack (http://slack.com) is a platform for team communication.
 
 %{__mkdir} -p %{buildroot}%{scudcloud_prefix}/lib
 %{__mkdir} -p %{buildroot}%{scudcloud_prefix}/resources
-%{__mkdir} -p %{buildroot}%{_datadir}/application
+%{__mkdir} -p %{buildroot}%{_datadir}/applications
 %{__mkdir} -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 %{__mkdir} -p %{buildroot}%{_bindir}
 
@@ -37,10 +37,12 @@ Slack (http://slack.com) is a platform for team communication.
 %{__install} -m 664 %{_builddir}/%{name}-%{version}/scudcloud-1.0/resources/* %{buildroot}%{scudcloud_prefix}/resources
 
 %{__install} -m 664 %{_builddir}/%{name}-%{version}/scudcloud-1.0/LICENSE %{buildroot}%{scudcloud_prefix}
-%{__install} -m 664 %{_builddir}/%{name}-%{version}/scudcloud-1.0/scudcloud.desktop %{buildroot}%{_datadir}/application
+%{__install} -m 664 %{_builddir}/%{name}-%{version}/scudcloud-1.0/scudcloud.desktop %{buildroot}%{_datadir}/applications
 %{__install} -m 664 %{_builddir}/%{name}-%{version}/scudcloud-1.0/systray/hicolor/* %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 
 %{__install} -m 755 %{_builddir}/%{name}-%{version}/scudcloud-1.0/scudcloud %{buildroot}%{_bindir}
+# For desktop app to work.
+%{__install} -m 755 %{_builddir}/%{name}-%{version}/scudcloud-1.0/scudcloud %{buildroot}%{scudcloud_prefix}
 
 find %{buildroot} -type f -printf "%y %%%%attr(0%m,-,-) %p\n" | \
 sed -e 's/^d /%%dir /' \
