@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import sys, os
-import notify2
 from cookiejar import PersistentCookieJar
 from leftpane import LeftPane
+from notifier import Notifier
 from systray import Systray
 from wrapper import Wrapper
 from os.path import expanduser
@@ -28,11 +28,17 @@ class ScudCloud(QtGui.QMainWindow):
     forceClose = False
     messages = 0
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, settings_path=None):
         super(ScudCloud, self).__init__(parent)
         self.setWindowTitle('ScudCloud')
-        notify2.init(self.APP_NAME)
-        self.settings = QSettings(expanduser("~")+"/.scudcloud", QSettings.IniFormat)
+        self.notifier = Notifier(self.APP_NAME, get_resource_path('scudcloud.png'))
+
+        if settings_path is None:
+            print("ERROR: Settings path not set!")
+            raise SystemExit()
+        else:
+            self.settings = QSettings(settings_path, QSettings.IniFormat)
+
         self.identifier = self.settings.value("Domain")
         if Unity is not None:
             self.launcher = Unity.LauncherEntry.get_for_desktop_id("scudcloud.desktop")
@@ -64,13 +70,15 @@ class ScudCloud(QtGui.QMainWindow):
         webView.show()
 
     def systray(self, show=None):
-        if show is None: 
+        if show is None:
             show = self.settings.value("Systray") == "True"
         if show:
             self.tray.show()
+            self.menus["file"]["close"].setEnabled(True)
             self.settings.setValue("Systray", "True")
         else:
             self.tray.setVisible(False)
+            self.menus["file"]["close"].setEnabled(False)
             self.settings.setValue("Systray", "False")
 
     def zoom(self):
@@ -100,7 +108,8 @@ class ScudCloud(QtGui.QMainWindow):
                 "systray":     self.createAction("Close to Tray", self.systray, None, True),
                 "addTeam":     self.createAction("Sign in to Another Team", self.current().addTeam),
                 "signout":     self.createAction("Signout", self.current().logout),
-                "exit":        self.createAction("Quit", self.exit, QKeySequence.Close)
+                "close":       self.createAction("Close", self.close, QKeySequence.Close),
+                "exit":        self.createAction("Quit", self.exit, QKeySequence.Quit)
             },
             "edit": {
                 "undo":        self.current().pageAction(QtWebKit.QWebPage.Undo),
@@ -129,6 +138,7 @@ class ScudCloud(QtGui.QMainWindow):
         fileMenu.addAction(self.menus["file"]["addTeam"])
         fileMenu.addAction(self.menus["file"]["signout"])
         fileMenu.addSeparator()
+        fileMenu.addAction(self.menus["file"]["close"])
         fileMenu.addAction(self.menus["file"]["exit"])
         editMenu = menu.addMenu("&Edit")
         editMenu.addAction(self.menus["edit"]["undo"])
@@ -149,7 +159,9 @@ class ScudCloud(QtGui.QMainWindow):
         helpMenu.addSeparator()
         helpMenu.addAction(self.menus["help"]["about"])
         self.enableMenus(False)
-        self.menus["file"]["systray"].setChecked(self.settings.value("Systray") == "True")
+        showSystray = self.settings.value("Systray") == "True"
+        self.menus["file"]["systray"].setChecked(showSystray)
+        self.menus["file"]["close"].setEnabled(showSystray)
 
     def enableMenus(self, enabled):
         self.menus["file"]["preferences"].setEnabled(enabled)
@@ -158,7 +170,7 @@ class ScudCloud(QtGui.QMainWindow):
         self.menus["help"]["help"].setEnabled(enabled)
 
     def createAction(self, text, slot, shortcut=None, checkable=False):
-        action = QtGui.QAction(text, self)        
+        action = QtGui.QAction(text, self)
         if shortcut is not None:
             action.setShortcut(shortcut)
         action.triggered.connect(slot)
@@ -179,7 +191,12 @@ class ScudCloud(QtGui.QMainWindow):
         if teams is not None and len(teams) > 1:
             self.leftPane.show()
             for t in teams:
-                self.leftPane.addTeam(t['id'], t['team_name'], t['team_url'], t == teams[0])
+                try:
+                    self.leftPane.addTeam(t['id'], t['team_name'], t['team_url'], t['team_icon']['image_88'], t == teams[0])
+                except:
+                    self.leftPane.addTeam(t['id'], t['team_name'], t['team_url'], '', t == teams[0])
+
+
 
     def switchTo(self, url):
         index = -1
@@ -226,6 +243,8 @@ class ScudCloud(QtGui.QMainWindow):
             event.ignore()
         else:
             self.cookiesjar.save()
+            self.settings.setValue("geometry", self.saveGeometry())
+            self.settings.setValue("windowState", self.saveState())
 
     def show(self):
         self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
@@ -251,11 +270,8 @@ class ScudCloud(QtGui.QMainWindow):
                         ql.child_append(item)
                 self.launcher.set_property("quicklist", ql)
 
-    def notify(self, title, message, retry=True):
-        notice = notify2.Notification(title, message, get_resource_path('scudcloud.png'))
-        # Allow appending new message to existing notification.
-        notice.set_hint_string('x-canonical-append', '')
-        notice.show()
+    def notify(self, title, message):
+        self.notifier.notify(title, message)
         self.alert()
 
     def alert(self):

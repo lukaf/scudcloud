@@ -27,12 +27,12 @@ class LeftPane(QWebView):
         self.setFixedWidth(0)
         self.setVisible(False)
 
-    def addTeam(self, id, name, url, active=False):
+    def addTeam(self, id, name, url, icon, active=False):
         if active is True:
             checked = "true"
         else:
             checked = "false"
-        self.page().currentFrame().evaluateJavaScript("LeftPane.addTeam('"+id+"','"+name+"','"+url+"', "+checked+");")
+        self.page().currentFrame().evaluateJavaScript("LeftPane.addTeam('"+id+"','"+name+"','"+url+"','"+icon+"',"+checked+");")
         
     def click(self, i):
         self.page().currentFrame().evaluateJavaScript("LeftPane.click("+str(i)+");")
@@ -49,7 +49,7 @@ class LeftPane(QWebView):
     def switchTo(self, url):
         self.window.switchTo(url)
 
-    #def contextMenuEvent(self, event):
-    #    pass
+    def contextMenuEvent(self, event):
+        pass
 
 

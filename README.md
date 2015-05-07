@@ -17,7 +17,9 @@ ScudCloud uses the [QT](http://qt-project.org) library + [Webkit](http://www.web
 
 # Install
 
-To install it under Ubuntu/Kubuntu 14.04, 14.10, Mint and Debian, open a Terminal (Ctrl+Alt+T) and run:
+Please, first update your system with a `sudo apt-get update && sudo apt-get upgrade`. If not, ScudCloud will crash with some old components.
+
+Then, to install it under **Ubuntu/Kubuntu** 14.04, 14.10, **Mint** and **Debian**, open a Terminal (Ctrl+Alt+T) and run:
 
 ```term
 sudo apt-add-repository -y ppa:rael-gc/scudcloud
@@ -25,9 +27,16 @@ sudo apt-get update
 sudo apt-get install scudcloud
 ```
 
-If you want **spell checking**, add the `hunspell` dictionary for your language. For `en-us`:
+If you want **spell checking** (it'll only mark wrong words in red, but no suggestions), add the `hunspell` dictionary for your language. For `en-us`:
 
     sudo apt-get install hunspell-en-us
+
+If you want to use a Slack icon instead of ScudCloud (which is not impossible to include in this package due copyright), download [any 128px Slack icon](https://www.google.com.br/search?q=slack+icon&tbm=isch&source=lnt&tbs=isz:ex,iszw:128,iszh:128) to your home folder saving as `scudcloud.png` and run:
+
+```term
+sudo dpkg-divert --add --rename --divert /opt/scudcloud/resources/scudcloud.png.real /opt/scudcloud/resources/scudcloud.png
+sudo cp ~/scudcloud.png /opt/scudcloud/resources/
+```
 
 ## Ubuntu 12.04
 
@@ -56,14 +65,14 @@ makepkg -si
 
 The manual install is intended for not supported distros (if you want to contribute with a package for your distro, you're welcome!).
 
-First, you'll need to install at least packages for `python3`, `python-qt4` (sometimes called `python3-qt4` or `python3-pyqt4`, i.e., `qt4` for `python3`) and `python-dbus` (`dbus` library for `python3`).
+First, you'll need to install at least packages for `python3`, `python-qt4` (`qt4` for `python3`) and `python-dbus` (`dbus` library for `python3`).
 
 Then run the below script: it'll download the code and install it:
 
 ```bash
-wget https://github.com/raelgc/scudcloud/archive/v1.0.21.tar.gz
-tar -xvf v1.0.21.tar.gz
-cd scudcloud-1.0.21
+wget https://github.com/raelgc/scudcloud/archive/v1.0.29.tar.gz
+tar -xvf v1.0.29.tar.gz
+cd scudcloud-1.0.29
 SOURCE="scudcloud-1.0"
 INSTALL="/opt/scudcloud"
 sudo mkdir -p $INSTALL/lib
@@ -72,8 +81,10 @@ sudo cp $SOURCE/lib/*.py $INSTALL/lib
 sudo cp $SOURCE/resources/* $INSTALL/resources
 sudo cp $SOURCE/scudcloud $INSTALL
 sudo cp $SOURCE/LICENSE $INSTALL
-sudo cp $SOURCE/scudcloud.desktop usr/share/applications
-sudo cp $SOURCE/systray/hicolor/* usr/share/icons/hicolor/scalable/apps
+sudo cp $SOURCE/scudcloud.desktop /usr/share/applications
+sudo cp $SOURCE/systray/hicolor/* /usr/share/icons/hicolor/scalable/apps
+sudo cp $SOURCE/systray/mono-dark/* /usr/share/icons/mono-dark/scalable/apps
+sudo cp $SOURCE/systray/mono-light/* /usr/share/icons/mono-light/scalable/apps
 sudo ln -sf $INSTALL/scudcloud /usr/bin/scudcloud
 ```
 

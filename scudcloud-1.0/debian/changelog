@@ -1,3 +1,37 @@
+scudcloud (1.0-30) trusty; urgency=low
+
+  * Better close shortcut behaviour (#70)
+
+ -- Rael Gugelmin Cunha <rael.gc@gmail.com>  Sat, 02 May 2015 09:29:12 -0300
+
+scudcloud (1.0-29) trusty; urgency=low
+
+  * Improved notifications (#93)
+
+ -- Rael Gugelmin Cunha <rael.gc@gmail.com>  Fri, 01 May 2015 19:27:17 -0300
+
+scudcloud (1.0-28) trusty; urgency=low
+
+  * Adding close shortcut (#70)
+  * Fixing URL whitelist regexp (#88)
+
+ -- Rael Gugelmin Cunha <rael.gc@gmail.com>  Thu, 30 Apr 2015 15:06:10 -0300
+
+scudcloud (1.0-27) trusty; urgency=low
+
+  * Fixing Archives (#60)
+  * Optional notifications (#72)
+  * XDG config file (#73,#78)
+  * Team Icons (#80)
+
+ -- Rael Gugelmin Cunha <rael.gc@gmail.com>  Sat, 25 Apr 2015 09:14:34 -0300
+
+scudcloud (1.0-26) trusty; urgency=low
+
+  * Saving last window settings (#49)
+
+ -- Rael Gugelmin Cunha <rael.gc@gmail.com>  Sat, 04 Apr 2015 22:21:45 -0300
+
 scudcloud (1.0-25) trusty; urgency=medium
 
   * SAML auth support (#44)
